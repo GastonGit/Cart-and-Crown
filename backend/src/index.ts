@@ -1,8 +1,12 @@
 import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
-dotenv.config();
 
+dotenv.config();
+console.log(`Starting server for ${process.env.APP_ENV} environment`);
+dotenv.config({ path: `.env.${process.env.APP_ENV}` });
+
+import { discordClient, logErrorToDiscord } from "./util/logger";
 import routes from "./routes";
 
 const PORT = process.env.PORT || 3000;
@@ -18,8 +22,9 @@ app.use("/api", routes);
 /**
  * Error handling
  */
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use(async (err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
+  await logErrorToDiscord(err);
   res.status(500).json({
     success: false,
     message: "Internal Server Error",
@@ -35,8 +40,11 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 /**
- * Start the server
+ * Connect to the Discord bot and start the server
  */
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+discordClient.once("ready", () => {
+  console.log(`Discord error logging ready`);
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });

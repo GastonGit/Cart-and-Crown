@@ -1,0 +1,43 @@
+{
+  "plugins": ["@typescript-eslint", "react", "prettier"],
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/typescript",
+    "plugin:react/recommended",
+    "plugin:import/warnings",
+    "plugin:import/errors",
+    "eslint:recommended",
+    "prettier"
+  ],
+
+  "ignorePatterns": [".html"],
+
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": "error",
+    "no-unused-vars": "off" // Turn off duplicate error
+  },
+
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    },
+    "react": {
+      "version": "detect"
+    }
+  }
+}

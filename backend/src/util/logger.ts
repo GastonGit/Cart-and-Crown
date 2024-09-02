@@ -9,7 +9,7 @@ export const discordClient = new Client({
 
 discordClient.login(TOKEN);
 
-export const logErrorToDiscord = async (error: Error) => {
+export async function logErrorToDiscord(error: Error) {
   try {
     const channel = await discordClient.channels.fetch(CHANNEL_ID);
     if (channel && channel instanceof TextChannel) {
@@ -20,4 +20,4 @@ export const logErrorToDiscord = async (error: Error) => {
   } catch (err) {
     console.error("Failed to log error to Discord:", err);
   }
-};
+}

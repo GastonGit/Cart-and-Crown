@@ -4,10 +4,14 @@
     "rootDir": "./src",
     "target": "ES6",
     "module": "commonjs",
-    "strict": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "noImplicitReturns": true,
     "esModuleInterop": true,
+    "noUnusedLocals": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "strict": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

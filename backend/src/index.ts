@@ -1,5 +1,5 @@
-import express, { NextFunction, Request, Response } from "express";
-import dotenv from "dotenv";
+import express, { Request, Response, json } from "express";
+import * as dotenv from "dotenv";
 import morgan from "morgan";
 
 dotenv.config();
@@ -17,13 +17,13 @@ const app = express();
  * Applications
  */
 app.use(morgan("tiny"));
-app.use(express.json());
+app.use(json());
 app.use("/api", routes);
 
 /**
  * Error handling
  */
-app.use(async (err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use(async (err: Error, req: Request, res: Response) => {
   console.error(err.stack);
   if (isProd()) {
     await logErrorToDiscord(err);

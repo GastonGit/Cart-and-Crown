@@ -13,6 +13,10 @@ function route(
   handler: (req: Request, res: Response) => void,
   auth = false
 ) {
+  if (!pathIsVersioned(path)) {
+    throw new Error(`Path "${path}" is missing version or path`);
+  }
+
   switch (type) {
     case "GET":
       router.get(path, errorHandler(handler));
@@ -33,7 +37,13 @@ function route(
   }
 }
 
-route("/login", "POST", login.handler);
-route("/isAuthenticated", "POST", isAuthenticated.handler, true);
+// TODO: Add test
+function pathIsVersioned(path: string): boolean {
+  const versionRegex = /^\/v\d+\/.+/; // /v1/something
+  return versionRegex.test(path);
+}
+
+route("/v1/login", "POST", login.handler);
+route("/v1/isAuthenticated", "POST", isAuthenticated.handler, true);
 
 export default router;

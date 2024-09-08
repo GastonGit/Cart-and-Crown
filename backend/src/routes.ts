@@ -1,9 +1,8 @@
 import { Router, Request, Response } from "express";
 import passport from "./passport";
 
-import * as isAuthenticated from "./functions/isAuthenticated";
 import errorHandler from "./util/errorHandler";
-import * as login from "./functions/login";
+import * as user from "./domain/user";
 
 const router = Router();
 
@@ -43,7 +42,7 @@ function pathIsVersioned(path: string): boolean {
   return versionRegex.test(path);
 }
 
-route("/v1/login", "POST", login.handler);
-route("/v1/isAuthenticated", "POST", isAuthenticated.handler, true);
+route("/v1/login", "POST", user.login);
+route("/v1/isAuthenticated", "POST", user.isAuthenticated, true);
 
 export default router;

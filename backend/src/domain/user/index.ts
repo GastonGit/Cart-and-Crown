@@ -1,7 +1,7 @@
-import { generateToken } from "../util/auth";
+import { generateToken } from "../../util/auth";
 import { Request, Response } from "express";
 
-export function handler(req: Request, res: Response) {
+export function login(req: Request, res: Response) {
   const {
     username, //password
   } = req.body;
@@ -16,5 +16,10 @@ export function handler(req: Request, res: Response) {
   const token = generateToken({ id: user.id, username: user.username });
 
   res.json({ token });
+  return;
+}
+
+export function isAuthenticated(req: Request, res: Response) {
+  res.send(`True`);
   return;
 }

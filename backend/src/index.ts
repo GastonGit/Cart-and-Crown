@@ -1,4 +1,5 @@
 import express, { Request, Response, json } from "express";
+import * as swaggerUi from "swagger-ui-express";
 import * as dotenv from "dotenv";
 import morgan from "morgan";
 
@@ -7,6 +8,7 @@ console.log(`Starting server for ${process.env.APP_ENV} environment`);
 dotenv.config({ path: `.env.${process.env.APP_ENV}` });
 
 import { discordClient, logErrorToDiscord } from "./util/logger";
+import openApiDocument from "./domain/api-docs";
 import { isDev, isProd } from "./globalconfig";
 import routes from "./routes";
 
@@ -18,7 +20,9 @@ const app = express();
  */
 app.use(morgan("tiny"));
 app.use(json());
+
 app.use("/api", routes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 /**
  * Error handling

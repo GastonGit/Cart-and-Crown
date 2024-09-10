@@ -1,48 +1,56 @@
 import { Router, Request, Response } from "express";
-import passport from "./passport";
-
 import errorHandler from "./util/errorHandler";
-import * as user from "./domain/user";
+import { routes } from "./globalconfig";
+import passport from "passport";
+import { z } from "zod";
+
+export enum RouteMethod {
+  GET = "GET",
+  POST = "POST",
+}
+
+const versionedPathSchema = z.string().regex(/^\/v\d+\/.+/, {
+  message: "Path must start with '/v' followed by a number and a path",
+});
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const RouteSchema = z.object({
+  path: versionedPathSchema,
+  method: z.enum([RouteMethod.GET, RouteMethod.POST]),
+  handler: z
+    .function()
+    .args(z.custom<Request>(), z.custom<Response>())
+    .returns(z.void()),
+  requiresAuth: z.boolean(),
+});
+
+export type Route = z.infer<typeof RouteSchema>;
 
 const router = Router();
 
-function route(
-  path: string,
-  type: "GET" | "POST",
-  handler: (req: Request, res: Response) => void,
-  auth = false
-) {
-  if (!pathIsVersioned(path)) {
-    throw new Error(`Path "${path}" is missing version or path`);
-  }
-
-  switch (type) {
+export function makeRoute(route: Route) {
+  switch (route.method) {
     case "GET":
-      router.get(path, errorHandler(handler));
+      router.get(route.path, errorHandler(route.handler));
       break;
     case "POST":
-      if (auth) {
+      if (route.requiresAuth) {
         router.post(
-          path,
+          route.path,
           passport.authenticate("jwt", { session: false }),
-          errorHandler(handler)
+          errorHandler(route.handler)
         );
       } else {
-        router.post(path, errorHandler(handler));
+        router.post(route.path, errorHandler(route.handler));
       }
       break;
     default:
-      throw new Error(`Invalid route path "${type}"`);
+      throw new Error(`Invalid method "${route.method}"`);
   }
 }
 
-// TODO: Add test
-function pathIsVersioned(path: string): boolean {
-  const versionRegex = /^\/v\d+\/.+/; // /v1/something
-  return versionRegex.test(path);
+for (const route of routes) {
+  makeRoute(route);
 }
-
-route("/v1/login", "POST", user.login);
-route("/v1/isAuthenticated", "POST", user.isAuthenticated, true);
 
 export default router;

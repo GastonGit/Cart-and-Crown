@@ -2,6 +2,7 @@ import {
   userLoginRequestSchema,
   userLoginResponseSchema,
 } from "../user/schemas";
+import { routeLogin } from "../../globalconfig";
 import { createDocument } from "zod-openapi";
 import "zod-openapi/extend";
 
@@ -12,7 +13,7 @@ const openApiDocument = createDocument({
     version: "1.0.0",
   },
   paths: {
-    "/api/v1/login": {
+    [routeLogin.path]: {
       post: {
         requestBody: {
           content: {

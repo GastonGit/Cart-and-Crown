@@ -10,7 +10,7 @@ dotenv.config({ path: `.env.${process.env.APP_ENV}` });
 import { discordClient, logErrorToDiscord } from "./util/logger";
 import openApiDocument from "./domain/api-docs";
 import { isProd } from "./globalconfig";
-import routes from "./routes";
+import routes from "./domain/routes";
 
 const PORT = process.env.PORT || 3000;
 const app = express();

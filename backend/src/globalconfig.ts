@@ -1,4 +1,4 @@
-import { Route, RouteMethod } from "./routes";
+import { Route, RouteMethod } from "./domain/routes/schemas";
 import * as user from "./domain/user";
 
 export const isDev = () => process.env.NODE_ENV === "development";

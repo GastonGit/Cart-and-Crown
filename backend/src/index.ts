@@ -7,9 +7,9 @@ dotenv.config();
 console.log(`Starting server for ${process.env.APP_ENV} environment`);
 dotenv.config({ path: `.env.${process.env.APP_ENV}` });
 
-import { discordClient, logErrorToDiscord } from "./util/logger";
+import { logErrorToDiscord, startDiscordLogger } from "./util/discordLogger";
+import { discordLoggerEnabled } from "./globalconfig";
 import openApiDocument from "./domain/api-docs";
-import { isProd } from "./globalconfig";
 import routes from "./domain/routes";
 
 const PORT = process.env.PORT || 3000;
@@ -45,7 +45,7 @@ app.use(
     }
 
     console.error(err.stack);
-    if (isProd()) {
+    if (discordLoggerEnabled) {
       await logErrorToDiscord(err);
     }
 
@@ -63,9 +63,12 @@ process.on("unhandledRejection", (reason, promise) => {
 /**
  * Connect to the Discord bot and start the server
  */
-discordClient.once("ready", () => {
-  console.log(`Discord error logging ready`);
+const startApp = async () => {
+  if (discordLoggerEnabled) {
+    await startDiscordLogger();
+  }
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
-});
+};
+startApp();

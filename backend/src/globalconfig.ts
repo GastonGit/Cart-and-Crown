@@ -4,6 +4,9 @@ import * as user from "./domain/user";
 export const isDev = () => process.env.NODE_ENV === "development";
 export const isProd = () => process.env.NODE_ENV === "production";
 
+export const discordLoggerEnabled =
+  process.env.DISCORD_LOGGER_ENABLED === "true";
+
 /**
  * Routes
  */

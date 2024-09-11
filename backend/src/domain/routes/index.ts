@@ -1,8 +1,8 @@
 import errorHandler from "../../util/errorHandler";
+import passport from "../passport/passport";
 import { routes } from "../../globalconfig";
 import { Route } from "./schemas";
 import { Router } from "express";
-import passport from "passport";
 
 const router = Router();
 

@@ -28,7 +28,7 @@ app.use("/api", routes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 // Handle invalid paths
-app.use("*", (req, res, next: NextFunction) => {
+app.use(/(.*)/, (req, res, next: NextFunction) => {
   res.status(404);
   next(new Error());
 });

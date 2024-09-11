@@ -21,3 +21,14 @@ export async function logErrorToDiscord(error: Error) {
     console.error("Failed to log error to Discord:", err);
   }
 }
+
+export async function startDiscordLogger() {
+  await new Promise((resolve, reject) => {
+    discordClient.once("error", reject);
+    discordClient.once("ready", () => {
+      discordClient.off("error", reject); // Remove error listener
+      console.log(`Discord error logging is ready`);
+      resolve(true);
+    });
+  });
+}

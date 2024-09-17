@@ -6,6 +6,9 @@
     "moduleResolution": "node",
     "types": ["jest"],
     "forceConsistentCasingInFileNames": true,
+    "strictPropertyInitialization": false, // Required for Sequelize-TypeScript
+    "experimentalDecorators": true, // Required for Sequelize-TypeScript
+    "emitDecoratorMetadata": true, // Required for Sequelize-TypeScript
     "resolveJsonModule": true,
     "noImplicitReturns": true,
     "esModuleInterop": true,

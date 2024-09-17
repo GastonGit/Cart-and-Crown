@@ -1,0 +1,6 @@
+const path = require("path");
+
+module.exports = {
+  config: path.resolve("dist", "db", "config.js"), // Remember to build!
+  "migrations-path": path.resolve("migrations"),
+};

@@ -2,9 +2,7 @@ import * as dotenv from "dotenv";
 
 export default function loadEnvConfig() {
   if (process?.env?.NODE_ENV) {
-    console.log(
-      `Environment variables are already loaded, skipping additional config setup`
-    );
+    console.log(`Environment variables are already loaded, skipping`);
     return;
   }
 

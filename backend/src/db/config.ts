@@ -1,7 +1,5 @@
-import loadEnvConfig from "../util/loadEnvConfig";
+import { databaseName, databasePassword, databaseUser } from "../globalconfig";
 import { Dialect } from "sequelize";
-
-loadEnvConfig();
 
 interface IDBConfig {
   username: string;
@@ -11,9 +9,9 @@ interface IDBConfig {
 }
 
 const dbConfig: IDBConfig = {
-  username: process.env.DB_USER || "",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "",
+  database: databaseName,
+  username: databaseUser,
+  password: databasePassword,
   dialect: "mysql" as Dialect,
 };
 

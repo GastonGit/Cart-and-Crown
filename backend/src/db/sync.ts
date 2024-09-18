@@ -1,13 +1,15 @@
-import sequelize from "./connection";
+import { getSequelize, loadSequelize } from "./connection";
 
 const syncDatabase = async () => {
   try {
-    await sequelize.sync();
+    loadSequelize();
+    await getSequelize().sync();
     console.log("Successfully synced the database");
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   } finally {
-    await sequelize.close();
+    await getSequelize().close();
+    console.error("Closed connection to database");
   }
 };
 

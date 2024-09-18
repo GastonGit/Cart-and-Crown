@@ -1,18 +1,18 @@
+import { logErrorToDiscord, startDiscordLogger } from "./util/discordLogger";
 import express, { NextFunction, Request, Response, json } from "express";
+import { discordLoggerEnabled, serverPort } from "./globalconfig";
+import { loadRouter, getRouter } from "./domain/router";
+import { loadPassport } from "./domain/passport";
 import * as swaggerUi from "swagger-ui-express";
-import * as dotenv from "dotenv";
+import openApiDocument from "./domain/api-docs";
+import { loadSequelize } from "./db/connection";
 import morgan from "morgan";
 
-dotenv.config();
-console.log(`Starting server for ${process.env.APP_ENV} environment`);
-dotenv.config({ path: `.env.${process.env.APP_ENV}` });
+loadPassport();
+loadRouter();
+loadSequelize();
 
-import { logErrorToDiscord, startDiscordLogger } from "./util/discordLogger";
-import { discordLoggerEnabled } from "./globalconfig";
-import openApiDocument from "./domain/api-docs";
-import routes from "./domain/routes";
-
-const PORT = process.env.PORT || 3000;
+const PORT = serverPort;
 const app = express();
 
 /**
@@ -24,7 +24,7 @@ app.use(json());
 /**
  * Routes
  */
-app.use("/api", routes);
+app.use("/api", getRouter());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 // Handle invalid paths

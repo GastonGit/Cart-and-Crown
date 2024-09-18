@@ -1,4 +1,4 @@
-import { routeSchema } from "../../../src/domain/routes/schemas";
+import { routeSchema } from "../../../src/domain/router/schemas";
 import { routes } from "../../../src/globalconfig";
 import { z } from "zod";
 

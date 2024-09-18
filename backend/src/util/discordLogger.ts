@@ -1,17 +1,32 @@
+import { DISCORD_CHANNEL_ID, DISCORD_TOKEN } from "../globalconfig";
 import { Client, GatewayIntentBits, TextChannel } from "discord.js";
 
-const CHANNEL_ID = process.env.DISCORD_CHANNEL_ID || "";
-const TOKEN = process.env.DISCORD_TOKEN || "";
+let discordClient: Client | null = null;
 
-export const discordClient = new Client({
-  intents: [GatewayIntentBits.Guilds],
-});
+export async function startDiscordLogger() {
+  const _discordClient = new Client({
+    intents: [GatewayIntentBits.Guilds],
+  });
+  _discordClient.login(DISCORD_TOKEN);
 
-discordClient.login(TOKEN);
+  await new Promise((resolve, reject) => {
+    _discordClient.once("error", reject);
+    _discordClient.once("ready", () => {
+      _discordClient.off("error", reject); // Remove error listener
+      console.log("Loaded discord client");
+      discordClient = _discordClient;
+      resolve(true);
+    });
+  });
+}
 
 export async function logErrorToDiscord(error: Error) {
+  if (!discordClient) {
+    throw new Error("Discord client is not loaded!");
+  }
+
   try {
-    const channel = await discordClient.channels.fetch(CHANNEL_ID);
+    const channel = await discordClient.channels.fetch(DISCORD_CHANNEL_ID);
     if (channel && channel instanceof TextChannel) {
       channel.send(
         `🚨 **Error**: ${error.message}\n\`\`\`${error.stack}\`\`\``
@@ -20,15 +35,4 @@ export async function logErrorToDiscord(error: Error) {
   } catch (err) {
     console.error("Failed to log error to Discord:", err);
   }
-}
-
-export async function startDiscordLogger() {
-  await new Promise((resolve, reject) => {
-    discordClient.once("error", reject);
-    discordClient.once("ready", () => {
-      discordClient.off("error", reject); // Remove error listener
-      console.log(`Discord error logging is ready`);
-      resolve(true);
-    });
-  });
 }

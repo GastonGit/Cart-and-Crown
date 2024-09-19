@@ -29,6 +29,12 @@ export const DISCORD_TOKEN = process.env.DISCORD_TOKEN || "";
 /**
  * Routes
  */
+export const routeSignup = {
+  path: "/v1/signup",
+  method: RouteMethod.POST,
+  handler: user.signup,
+  requiresAuth: false,
+};
 export const routeLogin = {
   path: "/v1/login",
   method: RouteMethod.POST,
@@ -41,4 +47,4 @@ export const routeIsAuthenticated = {
   handler: user.isAuthenticated,
   requiresAuth: true,
 };
-export const routes: Route[] = [routeLogin, routeIsAuthenticated];
+export const routes: Route[] = [routeSignup, routeLogin, routeIsAuthenticated];

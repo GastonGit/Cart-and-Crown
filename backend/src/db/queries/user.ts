@@ -1,4 +1,4 @@
-import { User } from "../../models/user";
+import { User } from "../models/user";
 
 async function createUser(user: { username: string; passwordHash: string }) {
   return await User.create({

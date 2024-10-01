@@ -1,0 +1,84 @@
+name: Build and test every updated project before merging to master
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  # Detect changes
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      admin: ${{ steps.filter.outputs.admin }}
+      backend: ${{ steps.filter.outputs.backend }}
+    steps:
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          admin:
+            - 'admin/**'
+          backend:
+            - 'backend/**'
+
+
+  # Build admin
+  admin:
+    needs: changes
+    if: ${{ needs.changes.outputs.admin == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      working-directory: admin
+      run: npm install
+
+    - name: Run linter
+      working-directory: admin
+      run: npm run lint
+
+    - name: Build project
+      working-directory: admin
+      run: npm run build
+
+
+  # Build and test the backend
+  backend:
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      working-directory: backend
+      run: npm install
+
+    - name: Run linter
+      working-directory: backend
+      run: npm run lint
+
+    - name: Test
+      working-directory: backend
+      run: npm test
+
+    - name: Build project
+      working-directory: backend
+      run: npm run build

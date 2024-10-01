@@ -1,4 +1,4 @@
-name: Build and test every updated project before merging to master
+name: Build and test PR
 
 on:
   pull_request:

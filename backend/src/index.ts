@@ -44,6 +44,11 @@ app.use(
       return;
     }
 
+    if (res.statusCode === 400) {
+      res.send(err.message);
+      return;
+    }
+
     console.error(err.stack);
     if (discordLoggerEnabled) {
       await logErrorToDiscord(err);

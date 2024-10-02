@@ -27,6 +27,11 @@ export const DISCORD_CHANNEL_ID = process.env.DISCORD_CHANNEL_ID || "";
 export const DISCORD_TOKEN = process.env.DISCORD_TOKEN || "";
 
 /**
+ * User
+ */
+export const _jwtSecret = process.env.JWT_SECRET;
+
+/**
  * Routes
  */
 export const routeSignup = {

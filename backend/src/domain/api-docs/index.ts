@@ -1,8 +1,9 @@
 import {
   userLoginRequestSchema,
   userLoginResponseSchema,
+  userSignupRequestSchema,
 } from "../user/schemas";
-import { routeLogin } from "../../globalconfig";
+import { routeLogin, routeSignup } from "../../globalconfig";
 import { createDocument } from "zod-openapi";
 import "zod-openapi/extend";
 
@@ -13,6 +14,26 @@ const openApiDocument = createDocument({
     version: "1.0.0",
   },
   paths: {
+    [routeSignup.path]: {
+      post: {
+        requestBody: {
+          content: {
+            "application/json": { schema: userSignupRequestSchema },
+          },
+        },
+        responses: {
+          "201": {
+            description: "Successful signup",
+          },
+          "400": {
+            description: "Invalid username or password",
+          },
+          "422": {
+            description: "Username is taken",
+          },
+        },
+      },
+    },
     [routeLogin.path]: {
       post: {
         requestBody: {
@@ -27,8 +48,8 @@ const openApiDocument = createDocument({
               "application/json": { schema: userLoginResponseSchema },
             },
           },
-          "401": {
-            description: "Invalid username or password",
+          "400": {
+            description: "Incorrect username or password",
           },
         },
       },

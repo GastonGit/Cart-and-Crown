@@ -39,10 +39,22 @@ export const userLoginRequestSchema = z.object({
     }),
 });
 
-export const userLoginResponseSchema = z.object({
-  token: z.string({ invalid_type_error: "Token must be a string" }).openapi({
-    description: "Bearer token requests requiring user authentication",
+const tokenSchema = z
+  .string({ invalid_type_error: "Token must be a string" })
+  .openapi({
+    description: "Bearer token for requests requiring user authentication",
     example:
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3MjU4MTU0NjIsImV4cCI6MTcyNTgxOTA2Mn0.vdFohh35toSN2hdV3dD-ro8EmWUWKynYQgX26VMq4Bc",
-  }),
+  });
+
+export const userLoginResponseSchema = z.object({
+  token: tokenSchema,
+});
+
+export const userStatusRequestSchema = z.object({
+  token: tokenSchema,
+});
+
+export const userStatusResponseSchema = z.object({
+  isAuthenticated: z.boolean(),
 });

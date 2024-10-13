@@ -9,7 +9,7 @@ loadEnvConfig();
  */
 export const isDev = () => process.env.NODE_ENV === "development";
 export const isProd = () => process.env.NODE_ENV === "production";
-export const serverPort = process.env.PORT || 3000;
+export const serverPort = Number(process.env.PORT) || 3000;
 
 /**
  * Database
@@ -34,22 +34,26 @@ export const _jwtSecret = process.env.JWT_SECRET;
 /**
  * Routes
  */
-export const routeSignup = {
-  path: "/v1/signup",
+export const routeUserSignup = {
+  path: "/v1/user/signup",
   method: RouteMethod.POST,
   handler: user.signup,
   requiresAuth: false,
 };
-export const routeLogin = {
-  path: "/v1/login",
+export const routeUserLogin = {
+  path: "/v1/user/login",
   method: RouteMethod.POST,
   handler: user.login,
   requiresAuth: false,
 };
-export const routeIsAuthenticated = {
-  path: "/v1/isAuthenticated",
+export const routeUserStatus = {
+  path: "/v1/user/status",
   method: RouteMethod.POST,
-  handler: user.isAuthenticated,
-  requiresAuth: true,
+  handler: user.status,
+  requiresAuth: false,
 };
-export const routes: Route[] = [routeSignup, routeLogin, routeIsAuthenticated];
+export const routes: Route[] = [
+  routeUserSignup,
+  routeUserLogin,
+  routeUserStatus,
+];

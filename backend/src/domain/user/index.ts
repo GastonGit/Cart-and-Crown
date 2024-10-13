@@ -1,7 +1,13 @@
-import { userLoginRequestSchema, userSignupRequestSchema } from "./schemas";
+import {
+  userLoginRequestSchema,
+  userLoginResponseSchema,
+  userSignupRequestSchema,
+  userStatusRequestSchema,
+  userStatusResponseSchema,
+} from "./schemas";
 import { getZodErrorMessages } from "../../util/getZodErrorMessages";
 import { securePassword, verifyPassword } from "./securePassword";
-import { generateToken } from "./authentication";
+import { generateToken, isValidToken } from "./authentication";
 import { Request, Response } from "express";
 import { ZodSchema } from "zod";
 import db from "../../db";
@@ -51,8 +57,19 @@ export async function login(req: Request, res: Response) {
   }
 
   const token = generateToken({ username });
+  res.json(userLoginResponseSchema.parse({ token }));
+  return;
+}
 
-  res.json({ token });
+export function status(req: Request, res: Response) {
+  const { token } = parseBody(
+    req,
+    res,
+    userStatusRequestSchema,
+    "Invalid token"
+  );
+  const isAuthenticated = isValidToken(token);
+  res.send(userStatusResponseSchema.parse({ isAuthenticated }));
   return;
 }
 
@@ -73,9 +90,4 @@ function parseBody<T>(
   }
   res.status(400);
   throw new Error(messages || defaultMessage);
-}
-
-export function isAuthenticated(req: Request, res: Response) {
-  res.send(`True`);
-  return;
 }

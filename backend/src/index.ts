@@ -72,7 +72,7 @@ const startApp = async () => {
   if (discordLoggerEnabled) {
     await startDiscordLogger();
   }
-  app.listen(PORT, () => {
+  app.listen(PORT, "127.0.0.1", () => {
     console.log(`Server is running on port ${PORT}`);
   });
 };

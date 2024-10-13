@@ -2,8 +2,14 @@ import {
   userLoginRequestSchema,
   userLoginResponseSchema,
   userSignupRequestSchema,
+  userStatusRequestSchema,
+  userStatusResponseSchema,
 } from "../user/schemas";
-import { routeLogin, routeSignup } from "../../globalconfig";
+import {
+  routeUserSignup,
+  routeUserLogin,
+  routeUserStatus,
+} from "../../globalconfig";
 import { createDocument } from "zod-openapi";
 import "zod-openapi/extend";
 
@@ -14,7 +20,7 @@ const openApiDocument = createDocument({
     version: "1.0.0",
   },
   paths: {
-    [routeSignup.path]: {
+    [routeUserSignup.path]: {
       post: {
         requestBody: {
           content: {
@@ -34,7 +40,7 @@ const openApiDocument = createDocument({
         },
       },
     },
-    [routeLogin.path]: {
+    [routeUserLogin.path]: {
       post: {
         requestBody: {
           content: {
@@ -50,6 +56,23 @@ const openApiDocument = createDocument({
           },
           "400": {
             description: "Incorrect username or password",
+          },
+        },
+      },
+    },
+    [routeUserStatus.path]: {
+      post: {
+        requestBody: {
+          content: {
+            "application/json": { schema: userStatusRequestSchema },
+          },
+        },
+        responses: {
+          "200": {
+            description: "User status properties such as authentication",
+            content: {
+              "application/json": { schema: userStatusResponseSchema },
+            },
           },
         },
       },

@@ -24,3 +24,9 @@ tsconfig.node.tsbuildinfo
 *.njsproj
 *.sln
 *.sw?
+
+# env
+.env*
+
+# Ignore scratch files and folders
+nogit-*

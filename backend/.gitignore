@@ -8,3 +8,7 @@ node_modules/
 .env
 .env.dev
 .env.prod
+
+# Public
+src/public/images/*
+!src/public/images/missing.png

@@ -33,6 +33,7 @@
         "caughtErrorsIgnorePattern": "^_"
       }
     ],
+    "no-undef": "off", // Let TypeScript handle this (avoids issue with Express.Multer.File)
     "no-unused-vars": "off" // Turn off duplicate error
   },
 

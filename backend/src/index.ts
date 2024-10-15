@@ -1,6 +1,10 @@
+import {
+  discordLoggerEnabled,
+  pathToImageFolder,
+  serverPort,
+} from "./globalconfig";
 import { logErrorToDiscord, startDiscordLogger } from "./util/discordLogger";
 import express, { NextFunction, Request, Response, json } from "express";
-import { discordLoggerEnabled, serverPort } from "./globalconfig";
 import { loadRouter, getRouter } from "./domain/router";
 import { loadPassport } from "./domain/passport";
 import * as swaggerUi from "swagger-ui-express";
@@ -26,6 +30,7 @@ app.use(json());
  */
 app.use("/api", getRouter());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
+app.use("/images", express.static(pathToImageFolder));
 
 // Handle invalid paths
 app.use(/(.*)/, (req, res, next: NextFunction) => {

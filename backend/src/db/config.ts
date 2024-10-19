@@ -1,4 +1,4 @@
-import { databaseName, databasePassword, databaseUser } from "../globalconfig";
+import * as gc from "../globalconfig";
 import { Dialect } from "sequelize";
 
 interface IDBConfig {
@@ -9,9 +9,9 @@ interface IDBConfig {
 }
 
 const dbConfig: IDBConfig = {
-  database: databaseName,
-  username: databaseUser,
-  password: databasePassword,
+  database: gc.databaseName,
+  username: gc.databaseUser,
+  password: gc.databasePassword,
   dialect: "mysql" as Dialect,
 };
 

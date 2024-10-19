@@ -1,9 +1,7 @@
-import { Route, RouteMethod } from "./domain/router/schemas";
 import loadEnvConfig from "./util/loadEnvConfig";
-import * as user from "./domain/user";
-import files from "./domain/files";
 import path from "path";
 
+// IMPORTANT: This file must avoid importing logic else some code might run with the following variables being undefined
 loadEnvConfig();
 
 /**
@@ -37,39 +35,3 @@ export const _jwtSecret = process.env.JWT_SECRET;
  * Paths
  */
 export const pathToImageFolder = path.join(__dirname, "public/images/");
-
-/**
- * Routes
- */
-export const routeUserSignup: Route = {
-  path: "/v1/user/signup",
-  method: RouteMethod.POST,
-  handler: user.signup,
-  requiresAuth: false,
-};
-export const routeUserLogin: Route = {
-  path: "/v1/user/login",
-  method: RouteMethod.POST,
-  handler: user.login,
-  requiresAuth: false,
-};
-export const routeUserStatus: Route = {
-  path: "/v1/user/status",
-  method: RouteMethod.POST,
-  handler: user.status,
-  requiresAuth: false,
-};
-
-export const routeFilesImageUpload: Route = {
-  path: "/v1/files/image/upload",
-  method: RouteMethod.POST,
-  handler: files.uploadImage,
-  requiresAuth: true,
-};
-
-export const routes: Route[] = [
-  routeUserSignup,
-  routeUserLogin,
-  routeUserStatus,
-  routeFilesImageUpload,
-];

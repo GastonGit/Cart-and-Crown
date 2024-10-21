@@ -95,21 +95,20 @@ async function handleFailedTask(
   }
 
   task.failures = task.failures + 1;
+
+  if (task.failures >= settings.maxFailures) {
+    task.status = TaskStatus.TERMINATED;
+    task.terminatedAt = new Date();
+  } else {
+    task.status = TaskStatus.PENDING;
+    task.nextRetryAt = dayjs()
+      .add(settings.retryCooldownSeconds, "seconds")
+      .toDate();
+  }
+
   try {
-    if (task.failures >= settings.maxFailures) {
-      task.status = TaskStatus.TERMINATED;
-      task.terminatedAt = new Date();
-    } else {
-      task.status = TaskStatus.PENDING;
-      task.nextRetryAt = dayjs()
-        .add(settings.retryCooldownSeconds, "seconds")
-        .toDate();
-    }
     await task.save();
-  } catch (ErroredTaskError) {
-    console.error(
-      `Failed to update errored task: ${task.id}`,
-      ErroredTaskError
-    );
+  } catch (SaveTaskError) {
+    console.error(`Failed to update failed task: ${task.id}`, SaveTaskError);
   }
 }

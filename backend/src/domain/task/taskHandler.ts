@@ -108,7 +108,7 @@ async function handleFailedTask(
 
   try {
     await task.save();
-  } catch (SaveTaskError) {
-    console.error(`Failed to update failed task: ${task.id}`, SaveTaskError);
+  } catch (saveTaskError) {
+    console.error(`Failed to update failed task: ${task.id}`, saveTaskError);
   }
 }

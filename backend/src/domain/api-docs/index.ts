@@ -6,10 +6,10 @@ import {
   userStatusResponseSchema,
 } from "../user/schemas";
 import {
-  routeUserSignup,
   routeUserLogin,
+  routeUserSignup,
   routeUserStatus,
-} from "../../globalconfig";
+} from "../router/routes";
 import { createDocument } from "zod-openapi";
 import "zod-openapi/extend";
 

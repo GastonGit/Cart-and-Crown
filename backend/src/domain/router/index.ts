@@ -1,7 +1,7 @@
 import errorHandler from "../../util/errorHandler";
-import { routes } from "../../globalconfig";
 import { getPassport } from "../passport";
 import { Route } from "./schemas";
+import { routes } from "./routes";
 import { Router } from "express";
 
 let router: Router | null = null;

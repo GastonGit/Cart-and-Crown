@@ -1,5 +1,5 @@
 import { routeSchema } from "../../../src/domain/router/schemas";
-import { routes } from "../../../src/globalconfig";
+import { routes } from "../../../src/domain/router/routes";
 import { z } from "zod";
 
 test("routes are valid", () => {

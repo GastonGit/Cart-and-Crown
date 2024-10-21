@@ -10,6 +10,8 @@ import { loadPassport } from "./domain/passport";
 import * as swaggerUi from "swagger-ui-express";
 import openApiDocument from "./domain/api-docs";
 import { loadSequelize } from "./db/connection";
+import { pingTaskQueues } from "./domain/task";
+import * as cron from "node-cron";
 import morgan from "morgan";
 
 loadPassport();
@@ -71,7 +73,7 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 /**
- * Connect to the Discord bot and start the server
+ * Connect to the Discord bot, start the server and initiate cron jobs
  */
 const startApp = async () => {
   if (discordLoggerEnabled) {
@@ -79,6 +81,7 @@ const startApp = async () => {
   }
   app.listen(PORT, "127.0.0.1", () => {
     console.log(`Server is running on port ${PORT}`);
+    cron.schedule("*/5 * * * * *", async () => await pingTaskQueues());
   });
 };
 startApp();

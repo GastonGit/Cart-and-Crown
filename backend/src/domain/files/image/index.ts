@@ -1,6 +1,9 @@
 import multer, { FileFilterCallback, MulterError, diskStorage } from "multer";
 import { pathToImageFolder } from "../../../globalconfig";
+import { TaskQueueName } from "../../task/schemas";
 import { Request, Response } from "express";
+import { createTask } from "../../task";
+import fs from "fs/promises";
 import path from "path";
 
 const MAX_FILE_SIZE_MB = 1;
@@ -52,7 +55,7 @@ const multerInstance = multer({
 });
 
 async function uploadImage(req: Request, res: Response) {
-  multerInstance.single("image")(req, res, (err) => {
+  multerInstance.single("image")(req, res, async (err) => {
     if (err) {
       handleUploadError(res, err);
       return;
@@ -64,11 +67,29 @@ async function uploadImage(req: Request, res: Response) {
       return;
     }
 
-    // TODO: Add image to database
+    try {
+      await createTask(TaskQueueName.SAVE_IMAGES, { imageUrl: file.filename });
+    } catch (err) {
+      console.error(`Failed to create save-image task`, err);
+      deleteFile(file);
+      res.sendStatus(500);
+      return;
+    }
 
     res.sendStatus(201);
     return;
   });
+}
+
+async function deleteFile(file: Express.Multer.File) {
+  console.log(`Deleting file: ${file.filename}`);
+  try {
+    const filePath = path.join(file.destination, file.filename);
+    await fs.unlink(filePath);
+    console.log(`File deleted`);
+  } catch (fileDeletionError) {
+    console.error(`Failed to delete file`, fileDeletionError);
+  }
 }
 
 function handleUploadError(res: Response, err: unknown) {
